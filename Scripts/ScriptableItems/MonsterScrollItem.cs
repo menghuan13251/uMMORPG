@@ -2,7 +2,6 @@
 //       otherwise they keep the "(Clone)" suffix on clients
 using System;
 using UnityEngine;
-using Mirror;
 
 [CreateAssetMenu(menuName="uMMORPG Item/Monster Scroll", order=999)]
 public class MonsterScrollItem : UsableItem

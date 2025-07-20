@@ -1,17 +1,16 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
-using Mirror;
 
 [RequireComponent(typeof(Level))]
 [DisallowMultipleComponent]
-public class Experience : NetworkBehaviour
+public class Experience : MonoBehaviour
 {
     [Header("Components")]
     public Level level;
 
     [Header("Experience")] // note: int is not enough (can have > 2 mil. easily)
-    [SyncVar, SerializeField] long _current = 0;
+   [ SerializeField] long _current = 0;
     public long current
     {
         get { return _current; }
@@ -88,7 +87,7 @@ public class Experience : NetworkBehaviour
     }
 
     // events //////////////////////////////////////////////////////////////////
-    [Server]
+ 
     public virtual void OnDeath()
     {
         // lose experience

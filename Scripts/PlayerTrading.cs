@@ -8,26 +8,25 @@
 // 5. they accept, then items and gold are swapped
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
 public enum TradingState { Free, Locked, Accepted }
 
 [RequireComponent(typeof(Player))]
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerTrading : NetworkBehaviour
+public class PlayerTrading : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
     public PlayerInventory inventory;
 
     [Header("Trading")]
-    [SyncVar, HideInInspector] public string requestFrom = "";
-    [SyncVar, HideInInspector] public TradingState state = TradingState.Free;
-    [SyncVar, HideInInspector] public long offerGold = 0;
-    public readonly SyncList<int> offerItems = new SyncList<int>(); // inventory indices
+   [ HideInInspector] public string requestFrom = "";
+  [ HideInInspector] public TradingState state = TradingState.Free;
+   [ HideInInspector] public long offerGold = 0;
+    public readonly List<int> offerItems = new List<int>(); // inventory indices
 
-    public override void OnStartServer()
+    public  void Start()
     {
         // initialize trade item indices
         for (int i = 0; i < 6; ++i)
@@ -53,7 +52,7 @@ public class PlayerTrading : NetworkBehaviour
     }
 
     // request a trade with the target player.
-    [Command]
+   
     public void CmdSendRequest()
     {
         // validate
@@ -66,7 +65,7 @@ public class PlayerTrading : NetworkBehaviour
     }
 
     // helper function to find the guy who sent us a trade invitation
-    [Server]
+   
     public Player FindPlayerFromInvitation()
     {
         if (requestFrom != "" &&
@@ -79,7 +78,7 @@ public class PlayerTrading : NetworkBehaviour
 
     // accept a trade invitation by simply setting 'requestFrom' for the other
     // person to self
-    [Command]
+  
     public void CmdAcceptRequest()
     {
         Player sender = FindPlayerFromInvitation();
@@ -95,13 +94,13 @@ public class PlayerTrading : NetworkBehaviour
     }
 
     // decline a trade invitation
-    [Command]
+   
     public void CmdDeclineRequest()
     {
         requestFrom = "";
     }
 
-    [Server]
+   
     public void Cleanup()
     {
         // clear all trade related properties
@@ -112,7 +111,7 @@ public class PlayerTrading : NetworkBehaviour
         requestFrom = "";
     }
 
-    [Command]
+   
     public void CmdCancel()
     {
         // validate
@@ -126,7 +125,7 @@ public class PlayerTrading : NetworkBehaviour
         }
     }
 
-    [Command]
+   
     public void CmdLockOffer()
     {
         // validate
@@ -134,7 +133,7 @@ public class PlayerTrading : NetworkBehaviour
             state = TradingState.Locked;
     }
 
-    [Command]
+   
     public void CmdOfferGold(long amount)
     {
         // validate
@@ -143,7 +142,7 @@ public class PlayerTrading : NetworkBehaviour
             offerGold = amount;
     }
 
-    [Command]
+   
     public void CmdOfferItem(int inventoryIndex, int offerIndex)
     {
         // validate
@@ -158,7 +157,7 @@ public class PlayerTrading : NetworkBehaviour
         }
     }
 
-    [Command]
+   
     public void CmdClearOfferItem(int offerIndex)
     {
         // validate
@@ -174,7 +173,7 @@ public class PlayerTrading : NetworkBehaviour
                inventory.slots[index].item.tradable;
     }
 
-    [Server]
+   
     bool IsOfferStillValid()
     {
         // not enough gold? then invalid
@@ -198,7 +197,7 @@ public class PlayerTrading : NetworkBehaviour
         return true;
     }
 
-    [Server]
+   
     int OfferItemSlotAmount()
     {
         // (avoid Linq because it is HEAVY(!) on GC and performance)
@@ -209,7 +208,7 @@ public class PlayerTrading : NetworkBehaviour
         return count;
     }
 
-    [Server]
+    
     int InventorySlotsNeededForTrade()
     {
         // if other guy offers 2 items and we offer 1 item then we only need
@@ -224,7 +223,7 @@ public class PlayerTrading : NetworkBehaviour
         return 0;
     }
 
-    [Command]
+  
     public void CmdAcceptOffer()
     {
         // validate

@@ -1,14 +1,14 @@
 ﻿// skill system for all entities (players, monsters, npcs, towers, ...)
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Mirror;
 
 // serializable events
 [Serializable] public class UnityEventSkill : UnityEvent<Skill> {}
 
 [DisallowMultipleComponent]
-public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, ICombatBonus
+public abstract class Skills : MonoBehaviour, IHealthBonus, IManaBonus, ICombatBonus
 {
     [Header("Components")]
     public Entity entity;
@@ -19,8 +19,8 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
     // 'skills' are the loaded skills with cooldowns etc.
     [Header("Skills & Buffs")]
     public ScriptableSkill[] skillTemplates;
-    public readonly SyncList<Skill> skills = new SyncList<Skill>();
-    public readonly SyncList<Buff> buffs = new SyncList<Buff>(); // active buffs
+    public readonly List<Skill> skills = new List<Skill>();
+    public readonly List<Buff> buffs = new List<Buff>(); // active buffs
 
     // effect mount is where the arrows/fireballs/etc. are spawned
     // -> can be overwritten, e.g. for mages to set it to the weapon's effect
@@ -40,7 +40,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
     public UnityEventSkill onSkillCastFinished;
 
     // current skill (synced because we need it as an animation parameter)
-    [SyncVar, HideInInspector] public int currentSkill = -1;
+    [HideInInspector] public int currentSkill = -1;
 
     // boni ////////////////////////////////////////////////////////////////////
     public int GetHealthBonus(int baseHealth)
@@ -213,7 +213,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
         skill.CheckDistance(entity, out destination);
 
     // starts casting
-    [Server]
+   
     public void StartCast(Skill skill)
     {
         // start casting and set the casting end time
@@ -227,7 +227,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
     }
 
     // cancel a skill cast properly
-    [Server]
+   
     public void CancelCast(bool resetCurrentSkill = true)
     {
         // reset cast time, otherwise if a buff has a 10s cast time and we
@@ -248,7 +248,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
     }
 
     // finishes casting. casting and waiting has to be done in the state machine
-    [Server]
+   
     public void FinishCast(Skill skill)
     {
         // * check if we can currently cast a skill (enough mana etc.)
@@ -284,7 +284,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
 
     // skill cast started rpc for client sided effects
     // note: pass Skill to avoid sync race conditions with indices etc.
-    [ClientRpc]
+  
     public void RpcCastStarted(Skill skill)
     {
         // validate: still alive?
@@ -300,7 +300,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
 
     // skill cast finished rpc for client sided effects
     // note: pass Skill to avoid sync race conditions with indices etc.
-    [ClientRpc]
+  
     public void RpcCastFinished(Skill skill)
     {
         // validate: still alive?
@@ -336,7 +336,7 @@ public abstract class Skills : NetworkBehaviour, IHealthBonus, IManaBonus, IComb
         }
     }
 
-    [Server]
+   
     public void OnDeath()
     {
         // clear buffs that shouldn't remain after death

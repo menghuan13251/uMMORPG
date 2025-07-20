@@ -2,17 +2,16 @@
 // => for consistency with PetControl
 // => if we need mount inventories, then we can put the Cmds in here too later
 using UnityEngine;
-using Mirror;
 
 [DisallowMultipleComponent]
-public class PlayerMountControl : NetworkBehaviour
+public class PlayerMountControl : MonoBehaviour
 {
     [Header("Mount")]
     public Transform meshToOffsetWhenMounted;
     public float seatOffsetY = -1;
 
     // 'Mount' can't be SyncVar so we use [SyncVar] GameObject and wrap it
-    [SyncVar, HideInInspector] public Mount activeMount;
+   [HideInInspector] public Mount activeMount;
 
     void LateUpdate()
     {

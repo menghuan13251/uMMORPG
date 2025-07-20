@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Mirror;
 
 public class UILatency : MonoBehaviour
 {

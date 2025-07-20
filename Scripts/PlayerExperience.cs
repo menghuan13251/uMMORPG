@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(PlayerChat))]
 [RequireComponent(typeof(PlayerParty))]
@@ -12,7 +11,7 @@ public class PlayerExperience : Experience
     [Header("Death")]
     public string deathMessage = "You died and lost experience.";
 
-    [Server]
+   
     public override void OnDeath()
     {
         // call base logic
@@ -23,7 +22,7 @@ public class PlayerExperience : Experience
     }
 
     // events //////////////////////////////////////////////////////////////////
-    [Server]
+ 
     public void OnKilledEnemy(Entity victim)
     {
         // killed a monster

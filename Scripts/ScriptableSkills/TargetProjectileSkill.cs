@@ -1,7 +1,6 @@
 ﻿// TargetProjectileSkill
 // -> assumes that all Entities have an Equipment component
 using UnityEngine;
-using Mirror;
 
 [CreateAssetMenu(menuName="uMMORPG Skill/Target Projectile", order=999)]
 public class TargetProjectileSkill : DamageSkill

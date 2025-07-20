@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(PlayerInventory))]
 [RequireComponent(typeof(PlayerParty))]
 [DisallowMultipleComponent]
-public class PlayerLooting : NetworkBehaviour
+public class PlayerLooting : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
@@ -13,7 +12,7 @@ public class PlayerLooting : NetworkBehaviour
     public PlayerParty party;
 
     // loot ////////////////////////////////////////////////////////////////////
-    [Command]
+   
     public void CmdTakeGold()
     {
         // validate: dead monster and close enough?
@@ -52,7 +51,7 @@ public class PlayerLooting : NetworkBehaviour
         }
     }
 
-    [Command]
+    
     public void CmdTakeItem(int index)
     {
         // validate: dead monster and close enough and valid loot index?

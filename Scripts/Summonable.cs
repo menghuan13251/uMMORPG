@@ -1,10 +1,10 @@
 ﻿// summonable entity types that are bound to a player (pet, mount, ...)
-using Mirror;
+
 using UnityEngine;
 
 public abstract class Summonable : Entity
 {
-    [SyncVar, HideInInspector] public Player owner;
+   [ HideInInspector] public Player owner;
 
     // sync with owner's item //////////////////////////////////////////////////
     protected virtual ItemSlot SyncStateToItemSlot(ItemSlot slot)
@@ -42,7 +42,7 @@ public abstract class Summonable : Entity
     // * OnDeath so that people can't cheat around reviving pets
     // => after a server crash the health/mana might not be exact, but that's a
     //    good price to pay to save computations in each Update tick
-    [Server]
+    
     public void SyncToOwnerItem()
     {
         // owner might be null if server shuts down and owner was destroyed before

@@ -3,9 +3,11 @@
 //    automatically.
 // => this way Npc dialogues only show what they offer. We don't have to hard
 //    code any possible type of offer there anymore.
-using Mirror;
 
-public abstract class NpcOffer : NetworkBehaviour
+
+using UnityEngine;
+
+public abstract class NpcOffer : MonoBehaviour
 {
     // does the npc have an offer for this player right now?
     // (for example, don't show Quests button if all quests were finished)

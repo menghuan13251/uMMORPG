@@ -1,11 +1,14 @@
 ﻿// Inventory & Equip both use slots and some common functions. might as well
 // abstract them to save code.
-using Mirror;
 
-public abstract class ItemContainer : NetworkBehaviour
+
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class ItemContainer : MonoBehaviour
 {
     // the slots
-    public readonly SyncList<ItemSlot> slots = new SyncList<ItemSlot>();
+    public readonly List<ItemSlot> slots = new List<ItemSlot>();
 
     // helper function to find an item in the slots
     public int GetItemIndexByName(string itemName)
@@ -32,7 +35,7 @@ public abstract class ItemContainer : NetworkBehaviour
     }
 
     // repair all items. can be used by Npc.
-    [Server]
+  
     public void RepairAllItems()
     {
         for (int i = 0; i < slots.Count; ++i)

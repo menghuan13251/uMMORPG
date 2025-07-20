@@ -55,7 +55,6 @@
 // - requires libsqlite3.so x86 and armeabi-v7a for android
 //   => compiled from sqlite.org amalgamation source with android ndk r9b linux
 using UnityEngine;
-using Mirror;
 using System;
 using System.IO;
 using System.Collections.Generic;

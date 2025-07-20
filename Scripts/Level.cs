@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
-using Mirror;
+
 
 [DisallowMultipleComponent]
-public class Level : NetworkBehaviour
+public class Level : MonoBehaviour
 {
-    [SyncVar] public int current = 1;
+   public int current = 1;
     public int max = 1;
 
     void OnValidate()

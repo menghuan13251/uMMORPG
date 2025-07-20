@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
 [Serializable]
 public partial struct ItemMallCategory
@@ -13,7 +12,7 @@ public partial struct ItemMallCategory
 [RequireComponent(typeof(PlayerChat))]
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerItemMall : NetworkBehaviour
+public class PlayerItemMall : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
@@ -22,16 +21,16 @@ public class PlayerItemMall : NetworkBehaviour
 
     [Header("Item Mall")]
     public ScriptableItemMall config;
-    [SyncVar] public long coins = 0;
+     public long coins = 0;
     public float couponWaitSeconds = 3;
 
-    public override void OnStartServer()
+    public  void Start()
     {
         InvokeRepeating(nameof(ProcessCoinOrders), 5, 5);
     }
 
     // item mall ///////////////////////////////////////////////////////////////
-    [Command]
+   
     public void CmdEnterCoupon(string coupon)
     {
         // only allow entering one coupon every few seconds to avoid brute force
@@ -44,7 +43,7 @@ public class PlayerItemMall : NetworkBehaviour
         }
     }
 
-    [Command]
+   
     public void CmdUnlockItem(int categoryIndex, int itemIndex)
     {
         // validate: only if alive so people can't buy resurrection potions
@@ -78,7 +77,7 @@ public class PlayerItemMall : NetworkBehaviour
     //
     // note: the alternative is to keep player.coins in the database at all
     // times, but then we need RPCs and the client needs a .coins value anyway.
-    [Server]
+   
     void ProcessCoinOrders()
     {
         List<long> orders = Database.singleton.GrabCharacterOrders(name);

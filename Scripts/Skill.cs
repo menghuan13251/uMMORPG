@@ -14,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using Mirror;
 
 [Serializable]
 public partial struct Skill

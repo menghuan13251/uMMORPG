@@ -14,7 +14,6 @@
 // _Note: the channel names, colors and commands can be edited in the Inspector_
 using System;
 using UnityEngine;
-using Mirror;
 
 [Serializable]
 public class ChannelInfo
@@ -61,7 +60,7 @@ public struct ChatMessage
 [RequireComponent(typeof(PlayerGuild))]
 [RequireComponent(typeof(PlayerParty))]
 [DisallowMultipleComponent]
-public class PlayerChat : NetworkBehaviour
+public class PlayerChat : MonoBehaviour
 {
     [Header("Components")] // to be assigned in inspector
     public PlayerGuild guild;
@@ -80,7 +79,7 @@ public class PlayerChat : NetworkBehaviour
     [Header("Events")]
     public UnityEventString onSubmit;
 
-    public override void OnStartLocalPlayer()
+    public  void Start()
     {
         // test messages
         UIChat.singleton.AddMessage(new ChatMessage("", infoChannel.identifierIn, "Use /w NAME to whisper", "",  infoChannel.textPrefab));
@@ -94,7 +93,7 @@ public class PlayerChat : NetworkBehaviour
     }
 
     // submit tries to send the string and then returns the new input text
-    [Client]
+    
     public string OnSubmit(string text)
     {
         // not empty and not only spaces?
@@ -186,7 +185,7 @@ public class PlayerChat : NetworkBehaviour
     }
 
     // networking //////////////////////////////////////////////////////////////
-    [Command]
+  
     void CmdMsgLocal(string message)
     {
         if (message.Length > maxLength) return;
@@ -195,7 +194,7 @@ public class PlayerChat : NetworkBehaviour
         RpcMsgLocal(name, message);
     }
 
-    [Command]
+    
     void CmdMsgParty(string message)
     {
         if (message.Length > maxLength) return;
@@ -214,7 +213,7 @@ public class PlayerChat : NetworkBehaviour
         }
     }
 
-    [Command]
+   
     void CmdMsgGuild(string message)
     {
         if (message.Length > maxLength) return;
@@ -233,7 +232,7 @@ public class PlayerChat : NetworkBehaviour
         }
     }
 
-    [Command]
+    
     void CmdMsgWhisper(string playerName, string message)
     {
         if (message.Length > maxLength) return;
@@ -249,7 +248,7 @@ public class PlayerChat : NetworkBehaviour
     }
 
     // send a global info message to everyone
-    [Server]
+    
     public void SendGlobalMessage(string message)
     {
         foreach (Player player in Player.onlinePlayers.Values)
@@ -257,7 +256,7 @@ public class PlayerChat : NetworkBehaviour
     }
 
     // message handlers ////////////////////////////////////////////////////////
-    [TargetRpc]
+    
     public void TargetMsgWhisperFrom(string sender, string message)
     {
         // add message with identifierIn
@@ -266,7 +265,7 @@ public class PlayerChat : NetworkBehaviour
         UIChat.singleton.AddMessage(new ChatMessage(sender, identifier, message, reply, whisperChannel.textPrefab));
     }
 
-    [TargetRpc]
+   
     public void TargetMsgWhisperTo(string receiver, string message)
     {
         // add message with identifierOut
@@ -275,7 +274,7 @@ public class PlayerChat : NetworkBehaviour
         UIChat.singleton.AddMessage(new ChatMessage(receiver, identifier, message, reply, whisperChannel.textPrefab));
     }
 
-    [ClientRpc]
+    
     public void RpcMsgLocal(string sender, string message)
     {
         // add message with identifierIn or Out depending on who sent it
@@ -284,21 +283,21 @@ public class PlayerChat : NetworkBehaviour
         UIChat.singleton.AddMessage(new ChatMessage(sender, identifier, message, reply, localChannel.textPrefab));
     }
 
-    [TargetRpc]
+   
     public void TargetMsgGuild(string sender, string message)
     {
         string reply = whisperChannel.command + " " + sender + " "; // whisper
         UIChat.singleton.AddMessage(new ChatMessage(sender, guildChannel.identifierIn, message, reply, guildChannel.textPrefab));
     }
 
-    [TargetRpc]
+    
     public void TargetMsgParty(string sender, string message)
     {
         string reply = whisperChannel.command + " " + sender + " "; // whisper
         UIChat.singleton.AddMessage(new ChatMessage(sender, partyChannel.identifierIn, message, reply, partyChannel.textPrefab));
     }
 
-    [TargetRpc]
+   
     public void TargetMsgInfo(string message)
     {
         AddMsgInfo(message);

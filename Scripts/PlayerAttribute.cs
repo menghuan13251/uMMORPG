@@ -1,17 +1,17 @@
 ﻿// for attributes, but we can't call it 'Attribute' because of C#'s Attribute
 using UnityEngine;
-using Mirror;
+
 
 [RequireComponent(typeof(Level))]
 [RequireComponent(typeof(Health))]
-public abstract class PlayerAttribute : NetworkBehaviour
+public abstract class PlayerAttribute : MonoBehaviour
 {
     [Header("Components")]
     public Level level;
     public Health health;
 
     [Header("Attribute")]
-    [SyncVar] public int value;
+   public int value;
     public static int SpendablePerLevel = 2;
 
     // cache attribute components
@@ -39,7 +39,7 @@ public abstract class PlayerAttribute : NetworkBehaviour
         return (level.current * SpendablePerLevel) - TotalPointsSpent();
     }
 
-    [Command]
+   
     public void CmdIncrease()
     {
         // validate

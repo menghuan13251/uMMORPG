@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [DisallowMultipleComponent]
-public class PlayerNpcRevive : NetworkBehaviour
+public class PlayerNpcRevive : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
 
-    [Command]
+   
     public void CmdRevive(int index)
     {
         // validate: close enough, npc alive and valid index and valid item?

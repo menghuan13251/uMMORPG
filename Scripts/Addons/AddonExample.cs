@@ -48,11 +48,10 @@
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 using UnityEngine.Events;
 
 // a regular addon /////////////////////////////////////////////////////////////
-public class AddonExample : NetworkBehaviour
+public class AddonExample : MonoBehaviour
 {
     // hook this into the Health component's OnEmpty method in the Inspector
     public void OnDeath()

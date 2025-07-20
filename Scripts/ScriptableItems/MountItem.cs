@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [CreateAssetMenu(menuName="uMMORPG Item/Mount", order=999)]
 public class MountItem : SummonableItem

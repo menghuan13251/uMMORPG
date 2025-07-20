@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(Level))]
 [RequireComponent(typeof(Movement))]
@@ -13,7 +12,7 @@ public class PlayerSkills : Skills
     public PlayerParty party;
 
     [Header("Skill Experience")]
-    [SyncVar] public long skillExperience = 0;
+     public long skillExperience = 0;
 
     void Start()
     {
@@ -30,7 +29,7 @@ public class PlayerSkills : Skills
                     buffs[i].data.SpawnEffect(entity, entity);
     }
 
-    [Command]
+   
     public void CmdUse(int skillIndex)
     {
         // validate
@@ -46,7 +45,7 @@ public class PlayerSkills : Skills
     }
 
     // helper function: try to use a skill and walk into range if necessary
-    [Client]
+    
     public void TryUse(int skillIndex, bool ignoreState=false)
     {
         // only if not casting already
@@ -108,7 +107,7 @@ public class PlayerSkills : Skills
     }
 
     // -> this is for learning and upgrading!
-    [Command]
+
     public void CmdUpgrade(int skillIndex)
     {
         // validate
@@ -130,7 +129,7 @@ public class PlayerSkills : Skills
     }
 
     // events //////////////////////////////////////////////////////////////////
-    [Server]
+  
     public void OnKilledEnemy(Entity victim)
     {
         // killed a monster

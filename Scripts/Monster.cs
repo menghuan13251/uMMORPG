@@ -26,12 +26,9 @@
 // will always be generated randomly. Monsters can also randomly generate loot
 // gold between a minimum and a maximum amount.
 using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(Inventory))]
 [RequireComponent(typeof(MonsterSkills))]
-[RequireComponent(typeof(NavMeshMovement))]
-[RequireComponent(typeof(NetworkNavMeshAgent))]
 public partial class Monster : Entity
 {
     [Header("Components")]
@@ -62,7 +59,7 @@ public partial class Monster : Entity
     [HideInInspector] public Vector3 startPosition;
 
     // networkbehaviour ////////////////////////////////////////////////////////
-    protected override void Start()
+    public   void Start()
     {
         base.Start();
 
@@ -142,7 +139,7 @@ public partial class Monster : Entity
         NetworkTime.time <= stunTimeEnd;
 
     // finite state machine - server ///////////////////////////////////////////
-    [Server]
+    
     string UpdateServer_IDLE()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -254,7 +251,7 @@ public partial class Monster : Entity
         return "IDLE"; // nothing interesting happened
     }
 
-    [Server]
+    
     string UpdateServer_MOVING()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -338,7 +335,7 @@ public partial class Monster : Entity
         return "MOVING"; // nothing interesting happened
     }
 
-    [Server]
+    
     string UpdateServer_CASTING()
     {
         // keep looking at the target for server & clients (only Y rotation)
@@ -426,7 +423,7 @@ public partial class Monster : Entity
         return "CASTING"; // nothing interesting happened
     }
 
-    [Server]
+
     string UpdateServer_STUNNED()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -445,7 +442,7 @@ public partial class Monster : Entity
         return "IDLE";
     }
 
-    [Server]
+ 
     string UpdateServer_DEAD()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -489,7 +486,7 @@ public partial class Monster : Entity
         return "DEAD"; // nothing interesting happened
     }
 
-    [Server]
+   
     protected override string UpdateServer()
     {
         if (state == "IDLE")    return UpdateServer_IDLE();
@@ -502,7 +499,7 @@ public partial class Monster : Entity
     }
 
     // finite state machine - client ///////////////////////////////////////////
-    [Client]
+   
     protected override void UpdateClient()
     {
         if (state == "CASTING")
@@ -529,7 +526,7 @@ public partial class Monster : Entity
 
     // aggro ///////////////////////////////////////////////////////////////////
     // this function is called by entities that attack us and by AggroArea
-    [ServerCallback]
+  
     public override void OnAggro(Entity entity)
     {
         // call base function
@@ -560,7 +557,7 @@ public partial class Monster : Entity
     }
 
     // death ///////////////////////////////////////////////////////////////////
-    [Server]
+  
     public override void OnDeath()
     {
         // take care of entity stuff

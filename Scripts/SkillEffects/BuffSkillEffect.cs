@@ -3,12 +3,11 @@
 //
 // Note: Particle Systems need Simulation Space = Local for it to work.
 using UnityEngine;
-using Mirror;
 
 public class BuffSkillEffect : SkillEffect
 {
     float lastRemainingTime = Mathf.Infinity;
-    [SyncVar, HideInInspector] public string buffName;
+    [ HideInInspector] public string buffName;
 
     void Update()
     {

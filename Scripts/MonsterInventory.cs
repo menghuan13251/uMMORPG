@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [DisallowMultipleComponent]
 public class MonsterInventory : Inventory
@@ -16,7 +15,7 @@ public class MonsterInventory : Inventory
     //       it's better than .RemoveAt() because we won't run into index-out-of
     //       range issues
 
-    [ClientCallback]
+   
     void Update()
     {
         // show loot indicator on clients while it still has items
@@ -39,7 +38,7 @@ public class MonsterInventory : Inventory
         return monster.gold > 0 || SlotsOccupied() > 0;
     }
 
-    [Server]
+   
     public void OnDeath()
     {
         // generate gold

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 using UnityEditor;
 
 [RequireComponent(typeof(PlayerTrading))]
@@ -14,7 +13,7 @@ public class PlayerInventory : Inventory
     public KeyCode[] splitKeys = { KeyCode.LeftShift, KeyCode.RightShift };
 
     [Header("Trash")]
-    [SyncVar] public ItemSlot trash;
+   public ItemSlot trash;
 
     // are inventory operations like swap, merge, split allowed at the moment?
     // -> trading offers are inventory indices. we don't allow any inventory
@@ -27,7 +26,7 @@ public class PlayerInventory : Inventory
                player.state == "CASTING";
     }
 
-    [Command]
+  
     public void CmdSwapInventoryTrash(int inventoryIndex)
     {
         // dragging an inventory item to the trash always overwrites the trash
@@ -48,7 +47,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [Command]
+   
     public void CmdSwapTrashInventory(int inventoryIndex)
     {
         if (InventoryOperationsAllowed() &&
@@ -65,7 +64,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [Command]
+   
     public void CmdSwapInventoryInventory(int fromIndex, int toIndex)
     {
         // note: should never send a command with complex types!
@@ -83,7 +82,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [Command]
+    
     public void CmdInventorySplit(int fromIndex, int toIndex)
     {
         // note: should never send a command with complex types!
@@ -112,7 +111,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [Command]
+  
     public void CmdInventoryMerge(int fromIndex, int toIndex)
     {
         if (InventoryOperationsAllowed() &&
@@ -142,7 +141,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [ClientRpc]
+  
     public void RpcUsedItem(Item item)
     {
         // validate
@@ -152,7 +151,7 @@ public class PlayerInventory : Inventory
         }
     }
 
-    [Command]
+    
     public void CmdUseItem(int index)
     {
         // validate

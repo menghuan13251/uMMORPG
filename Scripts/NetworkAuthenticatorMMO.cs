@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using Mirror;
 
 public class NetworkAuthenticatorMMO : NetworkAuthenticator
 {
@@ -19,10 +18,11 @@ public class NetworkAuthenticatorMMO : NetworkAuthenticator
     public int accountMaxLength = 16;
 
     // client //////////////////////////////////////////////////////////////////
-    public override void OnStartClient()
+    public void Start()
     {
         // register login success message, allowed before authenticated
         NetworkClient.RegisterHandler<LoginSuccessMsg>(OnClientLoginSuccess, false);
+          NetworkServer.RegisterHandler<LoginMsg>(OnServerLogin, false);
     }
 
     public override void OnClientAuthenticate()
@@ -52,11 +52,7 @@ public class NetworkAuthenticatorMMO : NetworkAuthenticator
     }
 
     // server //////////////////////////////////////////////////////////////////
-    public override void OnStartServer()
-    {
-        // register login message, allowed before authenticated
-        NetworkServer.RegisterHandler<LoginMsg>(OnServerLogin, false);
-    }
+   
 
     public override void OnServerAuthenticate(NetworkConnectionToClient conn)
     {

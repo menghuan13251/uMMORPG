@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Mirror;
 using TMPro;
 using UnityEngine.Events;
 
@@ -18,7 +17,7 @@ public interface ICombatBonus
 [Serializable] public class UnityEventIntDamageType : UnityEvent<int, DamageType> {}
 
 [DisallowMultipleComponent]
-public class Combat : NetworkBehaviour
+public class Combat : MonoBehaviour
 {
     [Header("Components")]
     public Level level;
@@ -28,7 +27,7 @@ public class Combat : NetworkBehaviour
 #pragma warning restore CS0109 // member does not hide accessible member
 
     [Header("Stats")]
-    [SyncVar] public bool invincible = false; // GMs, Npcs, ...
+     public bool invincible = false; // GMs, Npcs, ...
     public LinearInt baseDamage = new LinearInt{baseValue=1};
     public LinearInt baseDefense = new LinearInt{baseValue=1};
     public LinearFloat baseBlockChance;
@@ -104,7 +103,7 @@ public class Combat : NetworkBehaviour
     // combat //////////////////////////////////////////////////////////////////
     // deal damage at another entity
     // (can be overwritten for players etc. that need custom functionality)
-    [Server]
+  
     public virtual void DealDamageAt(Entity victim, int amount, float stunChance=0, float stunTime=0)
     {
         Combat victimCombat = victim.combat;
@@ -173,7 +172,7 @@ public class Combat : NetworkBehaviour
     // no need to instantiate damage popups on the server
     // -> calculating the position on the client saves server computations and
     //    takes less bandwidth (4 instead of 12 byte)
-    [Client]
+  
     void ShowDamagePopup(int amount, DamageType damageType)
     {
         // spawn the damage popup (if any) and set the text
@@ -194,7 +193,7 @@ public class Combat : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
+    
     public void RpcOnReceivedDamaged(int amount, DamageType damageType)
     {
         // show popup above receiver's head in all observers via ClientRpc

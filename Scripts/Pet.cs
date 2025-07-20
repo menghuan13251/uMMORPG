@@ -1,11 +1,8 @@
 using UnityEngine;
-using Mirror;
 using TMPro;
 
 [RequireComponent(typeof(Experience))]
 [RequireComponent(typeof(PetSkills))]
-[RequireComponent(typeof(NavMeshMovement))]
-[RequireComponent(typeof(NetworkNavMeshAgent))]
 public partial class Pet : Summonable
 {
     [Header("Components")]
@@ -37,8 +34,8 @@ public partial class Pet : Summonable
     [HideInInspector] public double deathTimeEnd; // double for long term precision
 
     [Header("Behaviour")]
-    [SyncVar] public bool defendOwner = true; // attack what attacks the owner
-    [SyncVar] public bool autoAttack = true; // attack what the owner attacks
+    public bool defendOwner = true; // attack what attacks the owner
+   public bool autoAttack = true; // attack what the owner attacks
 
     // sync to item ////////////////////////////////////////////////////////////
     protected override ItemSlot SyncStateToItemSlot(ItemSlot slot)
@@ -180,7 +177,7 @@ public partial class Pet : Summonable
         NetworkTime.time <= stunTimeEnd;
 
     // finite state machine - server ///////////////////////////////////////////
-    [Server]
+   
     string UpdateServer_IDLE()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -274,7 +271,7 @@ public partial class Pet : Summonable
         return "IDLE"; // nothing interesting happened
     }
 
-    [Server]
+   
     string UpdateServer_MOVING()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -351,7 +348,7 @@ public partial class Pet : Summonable
         return "MOVING"; // nothing interesting happened
     }
 
-    [Server]
+   
     string UpdateServer_CASTING()
     {
         // keep looking at the target for server & clients (only Y rotation)
@@ -422,7 +419,7 @@ public partial class Pet : Summonable
         return "CASTING"; // nothing interesting happened
     }
 
-    [Server]
+   
     string UpdateServer_STUNNED()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -448,7 +445,7 @@ public partial class Pet : Summonable
         return "IDLE";
     }
 
-    [Server]
+    
     string UpdateServer_DEAD()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -480,7 +477,7 @@ public partial class Pet : Summonable
         return "DEAD"; // nothing interesting happened
     }
 
-    [Server]
+   
     protected override string UpdateServer()
     {
         if (state == "IDLE")    return UpdateServer_IDLE();
@@ -493,12 +490,12 @@ public partial class Pet : Summonable
     }
 
     // finite state machine - client ///////////////////////////////////////////
-    [Client]
+   
     protected override void UpdateClient() {}
 
     // aggro ///////////////////////////////////////////////////////////////////
     // this function is called by entities that attack us
-    [ServerCallback]
+   
     public override void OnAggro(Entity entity)
     {
         // call base function
@@ -527,7 +524,7 @@ public partial class Pet : Summonable
     }
 
     // death ///////////////////////////////////////////////////////////////////
-    [Server]
+   
     public override void OnDeath()
     {
         // take care of entity stuff
@@ -558,13 +555,13 @@ public partial class Pet : Summonable
     // owner controls //////////////////////////////////////////////////////////
     // the Commands can only be called by the owner connection, so make sure to
     // spawn the pet via NetworkServer.Spawn(prefab, ownerConnection).
-    [Command]
+   
     public void CmdSetAutoAttack(bool value)
     {
         autoAttack = value;
     }
 
-    [Command]
+   
     public void CmdSetDefendOwner(bool value)
     {
         defendOwner = value;

@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [DisallowMultipleComponent]
-public class PlayerNpcTeleport : NetworkBehaviour
+public class PlayerNpcTeleport : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
 
-    [Command]
+   
     public void CmdNpcTeleport()
     {
         // validate

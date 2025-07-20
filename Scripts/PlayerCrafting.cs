@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Mirror;
 
 public enum CraftingState { None, InProgress, Success, Failed }
 
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerCrafting : NetworkBehaviour
+public class PlayerCrafting : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
@@ -17,7 +16,7 @@ public class PlayerCrafting : NetworkBehaviour
     public List<int> indices = Enumerable.Repeat(-1, ScriptableRecipe.recipeSize).ToList();
     [HideInInspector] public CraftingState state = CraftingState.None; // // client sided
     ScriptableRecipe currentRecipe; // currently crafted recipe. cached to avoid searching ALL recipes in Craft()
-    [SyncVar, HideInInspector] public double endTime; // double for long term precision
+    [HideInInspector] public double endTime; // double for long term precision
     [HideInInspector] public bool requestPending; // for state machine event
 
     // crafting ////////////////////////////////////////////////////////////////
@@ -34,7 +33,7 @@ public class PlayerCrafting : NetworkBehaviour
     // => we pass the recipe name so that we don't have to search ALL the
     //    recipes. this would slow down the server if we have lots of recipes.
     // => we just let the client do the searching!
-    [Command]
+   
     public void CmdCraft(string recipeName, int[] clientIndices)
     {
         // validate: between 1 and 6, all valid, no duplicates?
@@ -74,7 +73,7 @@ public class PlayerCrafting : NetworkBehaviour
     }
 
     // finish the crafting
-    [Server]
+   
     public void Craft()
     {
         // should only be called while CRAFTING and if recipe still valid
@@ -128,13 +127,13 @@ public class PlayerCrafting : NetworkBehaviour
     }
 
     // two rpcs for results to save 1 byte for the actual result
-    [TargetRpc] // only send to one client
+  
     public void TargetCraftingSuccess()
     {
         state = CraftingState.Success;
     }
 
-    [TargetRpc] // only send to one client
+   
     public void TargetCraftingFailed()
     {
         state = CraftingState.Failed;

@@ -1,13 +1,12 @@
 ﻿// for health, mana, etc.
 using UnityEngine;
 using UnityEngine.Events;
-using Mirror;
 
-public abstract class Energy : NetworkBehaviour
+public abstract class Energy : MonoBehaviour
 {
     // current value
     // set & get: keep between min and max
-    [SyncVar] int _current = 0;
+   int _current = 0;
     public int current
     {
         get { return Mathf.Min(_current, max); }
@@ -34,7 +33,7 @@ public abstract class Energy : NetworkBehaviour
     [Header("Events")]
     public UnityEvent onEmpty;
 
-    public override void OnStartServer()
+    public  void Start()
     {
         // set full energy on start if needed
         if (spawnFull) current = max;
@@ -48,7 +47,7 @@ public abstract class Energy : NetworkBehaviour
         (current != 0 && max != 0) ? (float)current / (float)max : 0;
 
     // recover once a second
-    [Server]
+   
     public void Recover()
     {
         if (enabled && health.current > 0)

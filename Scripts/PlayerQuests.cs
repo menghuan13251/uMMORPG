@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using Mirror;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerQuests : NetworkBehaviour
+public class PlayerQuests : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
@@ -11,7 +11,7 @@ public class PlayerQuests : NetworkBehaviour
 
     [Header("Quests")] // contains active and completed quests (=all)
     public int activeQuestLimit = 10;
-    public readonly SyncList<Quest> quests = new SyncList<Quest>();
+    public readonly List<Quest> quests = new List<Quest>();
 
     // quests //////////////////////////////////////////////////////////////////
     public int GetIndexByName(string questName)
@@ -68,7 +68,7 @@ public class PlayerQuests : NetworkBehaviour
                (quest.predecessor == null || HasCompleted(quest.predecessor.name));
     }
 
-    [Command]
+  
     public void CmdAccept(int npcQuestIndex)
     {
         // validate
@@ -105,7 +105,7 @@ public class PlayerQuests : NetworkBehaviour
         return false;
     }
 
-    [Command]
+ 
     public void CmdComplete(int npcQuestIndex)
     {
         // validate
@@ -147,7 +147,7 @@ public class PlayerQuests : NetworkBehaviour
     }
 
     // combat //////////////////////////////////////////////////////////////////
-    [Server]
+  
     public void OnKilledEnemy(Entity victim)
     {
         // call OnKilled in all active (not completed) quests
@@ -157,7 +157,7 @@ public class PlayerQuests : NetworkBehaviour
     }
 
     // ontrigger ///////////////////////////////////////////////////////////////
-    [ServerCallback]
+   
     void OnTriggerEnter(Collider col)
     {
         // quest location? then call OnLocation in active (not completed) quests

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 public class OneTimeTargetSkillEffect : SkillEffect
 {

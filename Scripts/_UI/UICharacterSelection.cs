@@ -2,7 +2,6 @@
 // easily show 3D models, stats, etc. too.
 using UnityEngine;
 using UnityEngine.UI;
-using Mirror;
 
 public partial class UICharacterSelection : MonoBehaviour
 {

@@ -3,11 +3,9 @@
 //
 // Npcs first show the welcome text and then have offers for item trading and
 // quests.
-using Mirror;
 using UnityEngine;
 
-[RequireComponent(typeof(NavMeshMovement))]
-[RequireComponent(typeof(NetworkNavMeshAgent))]
+
 // offer components are optional. don't [RequireComponent] them!
 public partial class Npc : Entity
 {
@@ -30,8 +28,8 @@ public partial class Npc : Entity
     }
 
     // finite state machine states /////////////////////////////////////////////
-    [Server] protected override string UpdateServer() { return state; }
-    [Client] protected override void UpdateClient() {}
+    protected override string UpdateServer() { return state; }
+    protected override void UpdateClient() {}
 
     // attack //////////////////////////////////////////////////////////////////
     public override bool CanAttack(Entity entity) { return false; }

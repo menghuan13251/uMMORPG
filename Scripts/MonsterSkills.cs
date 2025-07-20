@@ -5,7 +5,7 @@ public class MonsterSkills : Skills
     // the last skill that was casted, to decide which one to cast next
     [HideInInspector] public int lastSkill = -1;
 
-    public override void OnStartServer()
+    public  void Start()
     {
         // load skills based on skill templates
         foreach (ScriptableSkill skillData in skillTemplates)

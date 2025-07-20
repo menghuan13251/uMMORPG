@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using Mirror;
 using TMPro;
 
 [RequireComponent(typeof(PlayerChat))]
 [DisallowMultipleComponent]
-public class PlayerGuild : NetworkBehaviour
+public class PlayerGuild : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
@@ -18,8 +17,8 @@ public class PlayerGuild : NetworkBehaviour
     // .guild is a copy for easier reading/syncing. Use GuildSystem to manage
     // guilds!
     [Header("Guild")]
-    [SyncVar, HideInInspector] public string inviteFrom = "";
-    [SyncVar, HideInInspector] public Guild guild; // TODO SyncToOwner later but need to sync guild name to everyone!
+    [ HideInInspector] public string inviteFrom = "";
+   [ HideInInspector] public Guild guild; // TODO SyncToOwner later but need to sync guild name to everyone!
     public float inviteWaitSeconds = 3;
 
     void Start()
@@ -61,7 +60,7 @@ public class PlayerGuild : NetworkBehaviour
     // ServerCALLBACk to ignore the warning if it's called while server isn't
     // active, which happens if OnDestroy->SetOnline(false) is called while
     // shutting down.
-    [ServerCallback]
+    
     public void SetOnline(bool online)
     {
         // validate
@@ -69,7 +68,7 @@ public class PlayerGuild : NetworkBehaviour
             GuildSystem.SetGuildOnline(guild.name, name, online);
     }
 
-    [Command]
+   
     public void CmdInviteTarget()
     {
         // validate
@@ -91,7 +90,7 @@ public class PlayerGuild : NetworkBehaviour
         player.nextRiskyActionTime = NetworkTime.time + inviteWaitSeconds;
     }
 
-    [Command]
+   
     public void CmdInviteAccept()
     {
         // valid invitation?
@@ -108,13 +107,13 @@ public class PlayerGuild : NetworkBehaviour
         inviteFrom = "";
     }
 
-    [Command]
+   
     public void CmdInviteDecline()
     {
         inviteFrom = "";
     }
 
-    [Command]
+   
     public void CmdKick(string memberName)
     {
         // validate
@@ -122,7 +121,7 @@ public class PlayerGuild : NetworkBehaviour
             GuildSystem.KickFromGuild(guild.name, name, memberName);
     }
 
-    [Command]
+   
     public void CmdPromote(string memberName)
     {
         // validate
@@ -130,7 +129,7 @@ public class PlayerGuild : NetworkBehaviour
             GuildSystem.PromoteMember(guild.name, name, memberName);
     }
 
-    [Command]
+   
     public void CmdDemote(string memberName)
     {
         // validate
@@ -138,7 +137,7 @@ public class PlayerGuild : NetworkBehaviour
             GuildSystem.DemoteMember(guild.name, name, memberName);
     }
 
-    [Command]
+   
     public void CmdSetNotice(string notice)
     {
         // validate
@@ -163,7 +162,7 @@ public class PlayerGuild : NetworkBehaviour
                Utils.ClosestDistance(player, player.target) <= player.interactionRange;
     }
 
-    [Command]
+    
     public void CmdTerminate()
     {
         // validate
@@ -171,7 +170,7 @@ public class PlayerGuild : NetworkBehaviour
             GuildSystem.TerminateGuild(guild.name, name);
     }
 
-    [Command]
+   
     public void CmdCreate(string guildName)
     {
         // validate
@@ -186,7 +185,7 @@ public class PlayerGuild : NetworkBehaviour
         }
     }
 
-    [Command]
+   
     public void CmdLeave()
     {
         // validate

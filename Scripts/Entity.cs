@@ -32,7 +32,6 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using Mirror;
 using TMPro;
 
 [Serializable] public class UnityEventEntity : UnityEvent<Entity> {}
@@ -50,7 +49,7 @@ using TMPro;
 [RequireComponent(typeof(Rigidbody))] // kinematic, only needed for OnTrigger
 [RequireComponent(typeof(AudioSource))]
 [DisallowMultipleComponent]
-public abstract partial class Entity : NetworkBehaviour
+public abstract partial class Entity : MonoBehaviour
 {
     [Header("Components")]
     public Level level;
@@ -69,15 +68,15 @@ public abstract partial class Entity : NetworkBehaviour
     // finite state machine
     // -> state only writable by entity class to avoid all kinds of confusion
     [Header("State")]
-    [SyncVar, SerializeField] string _state = "IDLE";
+   [ SerializeField] string _state = "IDLE";
     public string state => _state;
 
     // it's useful to know an entity's last combat time (did/was attacked)
     // e.g. to prevent logging out for x seconds after combat
-    [SyncVar] public double lastCombatTime;
+   public double lastCombatTime;
 
     [Header("Target")]
-    [SyncVar, HideInInspector] public Entity target;
+   [ HideInInspector] public Entity target;
 
     [Header("Speed")]
     [SerializeField] protected LinearFloat _speed = new LinearFloat{baseValue=5};
@@ -107,7 +106,7 @@ public abstract partial class Entity : NetworkBehaviour
     //       responsibility principle. also, someone might want multiple
     //       inventories, or inherit from inventory without having gold, etc.
     [Header("Gold")]
-    [SyncVar, SerializeField] long _gold = 0;
+  [SerializeField] long _gold = 0;
     public long gold { get { return _gold; } set { _gold = Math.Max(value, 0); } }
 
     // 3D text mesh for name above the entity's head
@@ -127,15 +126,12 @@ public abstract partial class Entity : NetworkBehaviour
     [HideInInspector] public bool inSafeZone;
 
     // networkbehaviour ////////////////////////////////////////////////////////
-    public override void OnStartServer()
+    public  void Start()
     {
         // dead if spawned without health
         if (health.current == 0)
             _state = "DEAD";
-    }
-
-    protected virtual void Start()
-    {
+   
         // disable animator on server. this is a huge performance boost and
         // definitely worth one line of code (1000 monsters: 22 fps => 32 fps)
         // (!isClient because we don't want to do it in host mode either)
@@ -157,7 +153,7 @@ public abstract partial class Entity : NetworkBehaviour
     // -> can be overwritten if necessary (e.g. pets might be too far from
     //    observers but should still be updated to run to owner)
     // => only call this on server. client should always update!
-    [Server]
+   
     public virtual bool IsWorthUpdating() =>
         netIdentity.observers.Count > 0 ||
         IsHidden();
@@ -213,10 +209,10 @@ public abstract partial class Entity : NetworkBehaviour
     // note: using SetActive won't work because its not synced and it would
     //       cause inactive objects to not receive any info anymore
     // note: this won't be visible on the server as it always sees everything.
-    [Server]
+  
     public void Hide() => netIdentity.visible = Visibility.ForceHidden;
 
-    [Server]
+
     public void Show() => netIdentity.visible = Visibility.Default;
 
     // is the entity currently hidden?
@@ -228,7 +224,7 @@ public abstract partial class Entity : NetworkBehaviour
     public float VisRange() => ((SpatialHashingInterestManagement)NetworkServer.aoi).visRange;
 
     // revive //////////////////////////////////////////////////////////////////
-    [Server]
+ 
     public void Revive(float healthPercentage = 1)
     {
         health.current = Mathf.RoundToInt(health.max * healthPercentage);
@@ -261,7 +257,7 @@ public abstract partial class Entity : NetworkBehaviour
     // death ///////////////////////////////////////////////////////////////////
     // universal OnDeath function that takes care of all the Entity stuff.
     // should be called by inheriting classes' finite state machine on death.
-    [Server]
+  
     public virtual void OnDeath()
     {
         // clear target

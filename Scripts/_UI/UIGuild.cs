@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Mirror;
 
 public partial class UIGuild : MonoBehaviour
 {

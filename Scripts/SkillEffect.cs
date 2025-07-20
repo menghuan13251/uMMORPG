@@ -21,10 +21,9 @@
 // Note: make sure to drag all your SkillEffect prefabs into the NetworkManager
 //   spawnable prefabs list.
 using UnityEngine;
-using Mirror;
 
-public abstract class SkillEffect : NetworkBehaviour
+public abstract class SkillEffect : MonoBehaviour
 {
-    [SyncVar, HideInInspector] public Entity target;
-    [SyncVar, HideInInspector] public Entity caster;
+  [ HideInInspector] public Entity target;
+  [ HideInInspector] public Entity caster;
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
 
 [Serializable]
 public partial struct EquipmentInfo
@@ -49,7 +48,7 @@ public class PlayerEquipment : Equipment
                 skinBones[bone.name] = bone;
     }
 
-    public override void OnStartClient()
+    public  void Startt()
     {
         // setup synclist callbacks on client. no need to update and show and
         // animate equipment on server
@@ -64,7 +63,7 @@ public class PlayerEquipment : Equipment
             RefreshLocation(i);
     }
 
-    void OnEquipmentChanged(SyncList<ItemSlot>.Operation op, int index, ItemSlot oldSlot, ItemSlot newSlot)
+    void OnEquipmentChanged(List<ItemSlot>.Operation op, int index, ItemSlot oldSlot, ItemSlot newSlot)
     {
         // at first, check if the item model actually changed. we don't need to
         // refresh anything if only the durability changed.
@@ -183,7 +182,7 @@ public class PlayerEquipment : Equipment
     }
 
     // swap inventory & equipment slots to equip/unequip. used in multiple places
-    [Server]
+   
     public void SwapInventoryEquip(int inventoryIndex, int equipmentIndex)
     {
         // validate: make sure that the slots actually exist in the inventory
@@ -206,13 +205,13 @@ public class PlayerEquipment : Equipment
         }
     }
 
-    [Command]
+   
     public void CmdSwapInventoryEquip(int inventoryIndex, int equipmentIndex)
     {
         SwapInventoryEquip(inventoryIndex, equipmentIndex);
     }
 
-    [Server]
+  
     public void MergeInventoryEquip(int inventoryIndex, int equipmentIndex)
     {
         if (inventory.InventoryOperationsAllowed() &&
@@ -243,13 +242,12 @@ public class PlayerEquipment : Equipment
         }
     }
 
-    [Command]
     public void CmdMergeInventoryEquip(int equipmentIndex, int inventoryIndex)
     {
         MergeInventoryEquip(equipmentIndex, inventoryIndex);
     }
 
-    [Command]
+ 
     public void CmdMergeEquipInventory(int equipmentIndex, int inventoryIndex)
     {
         if (inventory.InventoryOperationsAllowed() &&

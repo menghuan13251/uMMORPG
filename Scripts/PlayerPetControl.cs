@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerPetControl : NetworkBehaviour
+public class PlayerPetControl : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
     public PlayerInventory inventory;
 
     [Header("Pet")]
-    [SyncVar, HideInInspector] public Pet activePet;
+    [ HideInInspector] public Pet activePet;
 
     // pet's destination should always be right next to player, not inside him
     // -> we use a helper property so we don't have to recalculate it each time
@@ -35,7 +34,7 @@ public class PlayerPetControl : NetworkBehaviour
                (activePet.state == "IDLE" || activePet.state == "MOVING");
     }
 
-    [Command]
+   
     public void CmdUnsummon()
     {
         // validate
@@ -47,7 +46,7 @@ public class PlayerPetControl : NetworkBehaviour
     }
 
     // combat //////////////////////////////////////////////////////////////////
-    [Server]
+
     public void OnDamageDealtTo(Entity victim)
     {
         // let pet know that we attacked something
@@ -55,7 +54,6 @@ public class PlayerPetControl : NetworkBehaviour
             activePet.OnAggro(victim);
     }
 
-    [Server]
     public void OnKilledEnemy(Entity victim)
     {
         // killed a monster

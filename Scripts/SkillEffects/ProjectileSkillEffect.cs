@@ -6,7 +6,6 @@
 // the server and the on the client to save bandwidth. Same result.
 using UnityEngine;
 using UnityEngine.Events;
-using Mirror;
 
 public class ProjectileSkillEffect : SkillEffect
 {
@@ -19,7 +18,7 @@ public class ProjectileSkillEffect : SkillEffect
     // corrected too. simply connect their .Clear() functions to the event.
     public UnityEvent onSetInitialPosition;
 
-    public override void OnStartClient()
+    public  void Start()
     {
         SetInitialPosition();
     }

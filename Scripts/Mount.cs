@@ -1,5 +1,4 @@
 using UnityEngine;
-using Mirror;
 
 public partial class Mount : Summonable
 {
@@ -69,7 +68,7 @@ public partial class Mount : Summonable
         }
     }
 
-    [Server]
+  
     string UpdateServer_IDLE()
     {
         // copy owner's position and rotation. no need for NetworkTransform.
@@ -97,7 +96,7 @@ public partial class Mount : Summonable
         return "IDLE"; // nothing interesting happened
     }
 
-    [Server]
+  
     string UpdateServer_DEAD()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -120,7 +119,7 @@ public partial class Mount : Summonable
         return "DEAD"; // nothing interesting happened
     }
 
-    [Server]
+    
     protected override string UpdateServer()
     {
         if (state == "IDLE")    return UpdateServer_IDLE();
@@ -130,7 +129,7 @@ public partial class Mount : Summonable
     }
 
     // finite state machine - client ///////////////////////////////////////////
-    [Client]
+   
     protected override void UpdateClient()
     {
         if (state == "IDLE" || state == "MOVING")
@@ -141,7 +140,7 @@ public partial class Mount : Summonable
     }
 
     // death ///////////////////////////////////////////////////////////////////
-    [Server]
+ 
     public override void OnDeath()
     {
         // take care of entity stuff

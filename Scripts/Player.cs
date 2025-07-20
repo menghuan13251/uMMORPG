@@ -23,7 +23,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Mirror;
 using TMPro;
 
 [Serializable] public class UnityEventPlayer : UnityEvent<Player> {}
@@ -97,7 +96,7 @@ public partial class Player : Entity
     //    mechanics/checks later
     // -> this way we can use SyncToObservers for the flag, and SyncToOwner for
     //    everything else in PlayerGameMaster component. this is a LOT easier.
-    [SyncVar] public bool isGameMaster;
+   public bool isGameMaster;
 
     // localPlayer singleton for easier access from UI scripts etc.
     public static Player localPlayer;
@@ -119,8 +118,8 @@ public partial class Player : Entity
     //    otherwise we would have to find the category from a hash.
     // => IMPORTANT: cooldowns need to be saved in database so that long
     //    cooldowns can't be circumvented by logging out and back in again.
-    internal readonly SyncDictionary<string, double> itemCooldowns =
-        new SyncDictionary<string, double>();
+    internal readonly Dictionary<string, double> itemCooldowns =
+        new Dictionary<string, double>();
 
     [Header("Interaction")]
     public float interactionRange = 4;
@@ -142,10 +141,10 @@ public partial class Player : Entity
 
     // some commands should have delays to avoid DDOS, too much database usage
     // or brute forcing coupons etc. we use one riskyAction timer for all.
-    [SyncVar, HideInInspector] public double nextRiskyActionTime = 0; // double for long term precision
+   [ HideInInspector] public double nextRiskyActionTime = 0; // double for long term precision
 
     // the next target to be set if we try to set it while casting
-    [SyncVar, HideInInspector] public Entity nextTarget;
+   [HideInInspector] public Entity nextTarget;
 
     // cache players to save lots of computations
     // (otherwise we'd have to iterate NetworkServer.objects all the time)
@@ -161,17 +160,14 @@ public partial class Player : Entity
     [HideInInspector] public int useSkillWhenCloser = -1;
 
     // networkbehaviour ////////////////////////////////////////////////////////
-    public override void OnStartLocalPlayer()
+    public  void Start()
     {
         // set singleton
         localPlayer = this;
 
         // setup camera targets
         GameObject.FindWithTag("MinimapCamera").GetComponent<CopyPosition>().target = transform;
-    }
-
-    protected override void Start()
-    {
+   
         // do nothing if not spawned (=for character selection previews)
         if (!isServer && !isClient) return;
 
@@ -287,16 +283,16 @@ public partial class Player : Entity
     // => we use set.Return to read and clear values
     HashSet<string> cmdEvents = new HashSet<string>();
 
-    [Command]
+   
     public void CmdRespawn() { cmdEvents.Add("Respawn"); }
     bool EventRespawn() { return cmdEvents.Remove("Respawn"); }
 
-    [Command]
+   
     public void CmdCancelAction() { cmdEvents.Add("CancelAction"); }
     bool EventCancelAction() { return cmdEvents.Remove("CancelAction"); }
 
     // finite state machine - server ///////////////////////////////////////////
-    [Server]
+    
     string UpdateServer_IDLE()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -376,7 +372,7 @@ public partial class Player : Entity
         return "IDLE"; // nothing interesting happened
     }
 
-    [Server]
+  
     string UpdateServer_MOVING()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -470,7 +466,6 @@ public partial class Player : Entity
         }
     }
 
-    [Server]
     string UpdateServer_CASTING()
     {
         // keep looking at the target for server & clients (only Y rotation)
@@ -590,7 +585,7 @@ public partial class Player : Entity
         return "CASTING"; // nothing interesting happened
     }
 
-    [Server]
+    
     string UpdateServer_STUNNED()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -609,7 +604,7 @@ public partial class Player : Entity
         return "IDLE";
     }
 
-    [Server]
+  
     string UpdateServer_TRADING()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -668,7 +663,7 @@ public partial class Player : Entity
         return "TRADING"; // nothing interesting happened
     }
 
-    [Server]
+  
     string UpdateServer_CRAFTING()
     {
 
@@ -710,7 +705,7 @@ public partial class Player : Entity
         return "CRAFTING"; // nothing interesting happened
     }
 
-    [Server]
+   
     string UpdateServer_DEAD()
     {
         // events sorted by priority (e.g. target doesn't matter if we died)
@@ -750,7 +745,7 @@ public partial class Player : Entity
         return "DEAD"; // nothing interesting happened
     }
 
-    [Server]
+   
     protected override string UpdateServer()
     {
         if (state == "IDLE")     return UpdateServer_IDLE();
@@ -765,7 +760,7 @@ public partial class Player : Entity
     }
 
     // finite state machine - client ///////////////////////////////////////////
-    [Client]
+   
     protected override void UpdateClient()
     {
         if (state == "IDLE" || state == "MOVING")
@@ -887,7 +882,7 @@ public partial class Player : Entity
     //    (doing those on server won't really work because the target might have
     //     moved, in which case we need to follow, which we need to do on the
     //     client)
-    [Client]
+  
     public void OnSkillCastFinished(Skill skill)
     {
         if (!isLocalPlayer) return;
@@ -914,7 +909,7 @@ public partial class Player : Entity
     }
 
     // combat //////////////////////////////////////////////////////////////////
-    [Server]
+  
     public void OnDamageDealtTo(Entity victim)
     {
         // attacked an innocent player
@@ -931,7 +926,7 @@ public partial class Player : Entity
         }
     }
 
-    [Server]
+  
     public void OnKilledEnemy(Entity victim)
     {
         // killed an innocent player
@@ -948,7 +943,7 @@ public partial class Player : Entity
 
     // aggro ///////////////////////////////////////////////////////////////////
     // this function is called by entities that attack us
-    [ServerCallback]
+   
     public override void OnAggro(Entity entity)
     {
         // call base function
@@ -981,7 +976,7 @@ public partial class Player : Entity
     }
 
     // death ///////////////////////////////////////////////////////////////////
-    [Server]
+    
     public override void OnDeath()
     {
         // take care of entity stuff
@@ -1061,7 +1056,7 @@ public partial class Player : Entity
     }
 
     // selection handling //////////////////////////////////////////////////////
-    [Command]
+    
     public void CmdSetTarget(NetworkIdentity ni)
     {
         // validate

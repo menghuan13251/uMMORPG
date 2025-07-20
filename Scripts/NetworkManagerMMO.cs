@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using Mirror;
 using UnityEngine.Events;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -27,7 +26,7 @@ public enum NetworkState { Offline, Handshake, Lobby, World }
 
 [RequireComponent(typeof(Database))]
 [DisallowMultipleComponent]
-public partial class NetworkManagerMMO : NetworkManager
+public partial class NetworkManagerMMO : MonoBehaviour
 {
     // current network manager state on client
     public NetworkState state = NetworkState.Offline;
@@ -122,9 +121,8 @@ public partial class NetworkManagerMMO : NetworkManager
     }
 
     // events //////////////////////////////////////////////////////////////////
-    public override void Awake()
+    public  void Awake()
     {
-        base.Awake();
 
         // cache list of player classes from spawn prefabs.
         // => we assume that this won't be changed at runtime (why would it?)
@@ -133,9 +131,9 @@ public partial class NetworkManagerMMO : NetworkManager
         playerClasses = FindPlayerClasses();
     }
 
-    public override void Update()
+    public  void Update()
     {
-        base.Update();
+      
 
         // any valid local player? then set state to world
         if (NetworkClient.localPlayer != null)
@@ -170,7 +168,7 @@ public partial class NetworkManagerMMO : NetworkManager
     }
 
     // start & stop ////////////////////////////////////////////////////////////
-    public override void OnStartClient()
+    public  void Start()
     {
         // setup handlers
         NetworkClient.RegisterHandler<ErrorMsg>(OnClientError, false); // allowed before auth!
@@ -178,10 +176,7 @@ public partial class NetworkManagerMMO : NetworkManager
 
         // addon system hooks
         onStartClient.Invoke();
-    }
-
-    public override void OnStartServer()
-    {
+   
         // connect to database
         Database.singleton.Connect();
 
@@ -196,15 +191,13 @@ public partial class NetworkManagerMMO : NetworkManager
         // addon system hooks
         onStartServer.Invoke();
     }
-
-    public override void OnStopClient()
+    private void OnDestroy()
     {
+        
+   
         // addon system hooks
         onStopClient.Invoke();
-    }
-
-    public override void OnStopServer()
-    {
+   
         CancelInvoke(nameof(SavePlayers));
 
         // addon system hooks
@@ -632,9 +625,9 @@ public partial class NetworkManagerMMO : NetworkManager
 #endif
     }
 
-    public override void OnValidate()
+    public  void OnValidate()
     {
-        base.OnValidate();
+       
 
         // ip has to be changed in the server list. make it obvious to users.
         if (!Application.isPlaying && networkAddress != "")

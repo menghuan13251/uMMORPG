@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [RequireComponent(typeof(PlayerInventory))]
 [DisallowMultipleComponent]
-public class PlayerNpcTrading : NetworkBehaviour
+public class PlayerNpcTrading : MonoBehaviour
 {
     [Header("Components")]
     public Player player;
     public PlayerInventory inventory;
 
     // trading /////////////////////////////////////////////////////////////////
-    [Command]
+   
     public void CmdBuyItem(int index, int amount)
     {
         // validate: close enough, npc alive and valid index?
@@ -40,7 +39,7 @@ public class PlayerNpcTrading : NetworkBehaviour
         }
     }
 
-    [Command]
+  
     public void CmdSellItem(int index, int amount)
     {
         // validate: close enough, npc alive and valid index and valid item?
@@ -70,7 +69,7 @@ public class PlayerNpcTrading : NetworkBehaviour
         }
     }
 
-    [Command]
+  
     public void CmdRepairAllItems()
     {
         // validate: close enough, npc alive and valid index and valid item?

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Mirror;
 
 [Serializable]
 public struct SkillbarEntry
@@ -14,7 +13,7 @@ public struct SkillbarEntry
 [RequireComponent(typeof(PlayerEquipment))]
 [RequireComponent(typeof(PlayerInventory))]
 [RequireComponent(typeof(PlayerSkills))]
-public class PlayerSkillbar : NetworkBehaviour
+public class PlayerSkillbar : MonoBehaviour
 {
     [Header("Components")]
     public PlayerEquipment equipment;
@@ -36,15 +35,14 @@ public class PlayerSkillbar : NetworkBehaviour
         new SkillbarEntry{reference="", hotKey=KeyCode.Alpha0},
     };
 
-    public override void OnStartLocalPlayer()
+    public  void Start()
     {
         // load skillbar after player data was loaded
         Load();
     }
-
-    public override void OnStopClient()
+    private void OnDestroy()
     {
-        if (isLocalPlayer)
+   
             Save();
     }
 
@@ -61,7 +59,7 @@ public class PlayerSkillbar : NetworkBehaviour
         PlayerPrefs.Save();
     }
 
-    [Client]
+   
     void Load()
     {
         Debug.Log("loading skillbar for " + name);

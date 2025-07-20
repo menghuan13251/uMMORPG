@@ -1,6 +1,6 @@
 ﻿public class PetCombat : Combat
 {
-    public override void OnStartServer()
+    public  void Start()
     {
         // forward events to owner
         onDamageDealtTo.AddListener((victim) => {

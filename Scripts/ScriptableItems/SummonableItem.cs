@@ -2,7 +2,6 @@
 // not to be confused with Monster Scrolls, that simply spawn monsters.
 // (summonables are entities that belong to the player, like pets and mounts)
 using UnityEngine;
-using Mirror;
 
 public abstract class SummonableItem : UsableItem
 {

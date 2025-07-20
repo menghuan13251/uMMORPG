@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mirror;
 
 [CreateAssetMenu(menuName="uMMORPG Item/Pet", order=999)]
 public class PetItem : SummonableItem
